@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Raees Blog</title>
+</head>
+<body>
+
+<h1><a href=""> Python with Raees </a> </h1>
+<br>
+
+{% for post in posts %}
+    <div>
+        <p> <strong>Published: </strong> {{ post.published_date }}</p>
+        <h2><a href=""> {{ post.title }} </a></h2>
+        <p> {{ post.body|linebreaksbr }} </p>
+    </div>
+<br>
+<br>
+
+
+
+{% endfor %}
+
+
+
+
+</body>
+</html>
