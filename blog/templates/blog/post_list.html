@@ -1,29 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Raees Blog</title>
-</head>
-<body>
+{% extends 'blog/base.html' %}
 
-<h1><a href=""> Python with Raees </a> </h1>
-<br>
+{% block content %}
 
-{% for post in posts %}
-    <div>
-        <p> <strong>Published: </strong> {{ post.published_date }}</p>
-        <h2><a href="{% url 'post_detail' pk=post.pk %}"> {{ post.title }} </a></h2>
-        <p> {{ post.body|linebreaksbr }} </p>
-    </div>
-<br>
-<br>
+    {% for post in posts %}
+        <div class="post">
+            <div class="date">
+                <p> <strong>Published: </strong> {{ post.published_date }}</p>
+            </div>
+            <h2><a href="{% url 'post_detail' pk=post.pk %}"> {{ post.title }} </a></h2>
+            <p> {{ post.body|linebreaksbr }} </p>
+        </div>
+        <br>
+        <br>
+    {% endfor %}
 
-
-
-{% endfor %}
-
-
-
-
-</body>
-</html>
+{% endblock %}
