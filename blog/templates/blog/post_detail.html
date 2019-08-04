@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load markdownify %}
 
 {% block title %} {{ post.title }} {% endblock %}
 
@@ -18,7 +19,7 @@
             <a href="{% url 'post_edit' pk=post.pk %}"> <i class="fas fa-edit fa-2x"></i> </a>
             {% endif %}
             <h2>{{ post.title }}</h2>
-            <p>{{ post.body|linebreaksbr }}</p>
+            <p>{{ post.body | linebreaksbr | markdown | safe }}</p>
         </div>
     </div>
 
@@ -45,7 +46,7 @@
 
                 <strong>{{ comment.author }}</strong>
 
-                <p>{{ comment.text }}</p>
+                <p>{{ comment.text  | markdown | safe }}</p>
                 <br><br>
             </div>
 
