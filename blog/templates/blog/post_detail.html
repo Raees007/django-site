@@ -25,6 +25,7 @@
     <a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-secondary">Add Comment</a><br>
     {% for comment in post.comments.all %}
         <div class="comment">
+            <a href="{% url 'comment_remove' pk=comment.pk %}"><i class="fas fa-trash"></i></a>
             <strong>{{ comment.author }}</strong>
             <div class="date">
                 <p class="date">{{ comment.created_date }}</p>
