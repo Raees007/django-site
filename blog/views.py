@@ -1,8 +1,12 @@
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.utils import timezone
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, UserForm
+
+
 # Create your views here.
 
 def post_list(request):
@@ -10,10 +14,12 @@ def post_list(request):
     stuff_for_frontend = {'posts': posts}
     return render(request, 'blog/post_list.html', stuff_for_frontend)
 
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     stuff_for_frontend = {'post': post}
     return render(request, 'blog/post_detail.html', stuff_for_frontend)
+
 
 @login_required()
 def post_new(request):
@@ -29,6 +35,7 @@ def post_new(request):
         form = PostForm()
         stuff_for_frontend = {'form': form}
     return render(request, 'blog/post_edit.html', stuff_for_frontend)
+
 
 @login_required()
 def post_edit(request, pk):
@@ -47,11 +54,13 @@ def post_edit(request, pk):
         stuff_for_frontend = {'form': form, 'post': post}
     return render(request, 'blog/post_edit.html', stuff_for_frontend)
 
+
 @login_required()
 def post_draft(request):
     posts = Post.objects.filter(published_date__isnull=True).order_by('-created_date')
     stuff_for_frontend = {'posts': posts}
     return render(request, 'blog/post_draft.html', stuff_for_frontend)
+
 
 @login_required()
 def post_publish(request, pk):
@@ -59,11 +68,13 @@ def post_publish(request, pk):
     post.publish()
     return redirect('post_detail', pk=pk)
 
+
 @login_required()
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('/', pk=post.pk)
+
 
 @login_required()
 def add_comment_to_post(request, pk):
@@ -80,14 +91,28 @@ def add_comment_to_post(request, pk):
         form = CommentForm()
     return render(request, 'blog/add_comment_to_post.html', {'form': form})
 
+
 @login_required()
 def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.delete()
     return redirect('post_detail', pk=comment.post.pk)
 
+
 @login_required()
 def comment_approve(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.approve()
     return redirect('post_detail', pk=comment.post.pk)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            new_user = User.objects.create_user(**form.cleaned_data)
+            login(request, new_user)
+            return redirect('/')
+    else:
+        form = UserForm()
+    return render(request, 'blog/signup.html', {'form': form})
